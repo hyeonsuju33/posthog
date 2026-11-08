@@ -59,7 +59,7 @@ jobs:
             !startsWith(github.head_ref, 'trunk-merge/') &&
             (github.event.pull_request.draft != true ||
             !contains(github.event.pull_request.labels.*.name, 'no-ci'))
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         permissions: {}
         steps:
@@ -74,7 +74,7 @@ jobs:
     # we skip each step individually, so   they are still reported as success
     # because many of them are required for CI checks to be green
     changes:
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         # A draft PR labeled `no-ci` skips this workflow entirely (prototypes):
         # every other job needs this one, and the gates treat skipped as success.
@@ -276,7 +276,7 @@ jobs:
     # PR takes the full matrix and a draft skips jest, deferring to its ready run.
     select-jest-tests:
         name: Select jest tests
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         # Installs the frontend workspace to list the related tests.
         timeout-minutes: 10
         needs: changes
@@ -463,7 +463,7 @@ jobs:
         # Not on the hourly cron: that lane exists for jest only, and formatting
         # already ran on the push that landed each commit.
         if: needs.changes.outputs.frontend == 'true' && github.event_name != 'schedule'
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 10
         steps:
             - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -547,7 +547,7 @@ jobs:
         # Not on the hourly cron: the vs-base comparison build is pull_request-only,
         # so a cron run measures an absolute size with nothing to compare it against.
         if: needs.changes.outputs.frontend_code == 'true' && github.event_name != 'schedule'
-        runs-on: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false) && vars.FRONTEND_CHECKS_RUNNER || 'ubuntu-24.04' }}
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 15
         steps:
             - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -802,7 +802,7 @@ jobs:
         # shared cache credentials ambiently (see _rust-build-images.yml, which skips sccache
         # creds for the same reason). GitHub warns against exposing a larger runner with a
         # static IP range to fork pull requests, so keep this runner's group off static IPs.
-        runs-on: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false) && 'depot-ubuntu-24.04-8' || 'ubuntu-24.04-8core' }}
+        runs-on: xenoci-2vcpu-ubuntu-2404
         # Kea typegen invalidates on changes to any logic plus everything that depends on it.
         # For changes to shared core (TaxonomicFilter, Insight, etc.) the dependent set is
         # large, so the budget must fit a cache miss on top of the baseline build.
@@ -878,7 +878,7 @@ jobs:
                     run: node bin/validate-setup-tasks.mjs
 
     jest:
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         # PRs run as many selective shards as the tests reachable from the changed
         # files need under the file limit in .github/scripts/jest-select.js. The
         # merge queue runs the full four-shard fanout. A copy of the repository lands
@@ -1023,7 +1023,7 @@ jobs:
               run: exit 1
 
     jest-replay-shared:
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 10
         needs: changes
         if: needs.changes.outputs.replay_shared == 'true'
@@ -1095,7 +1095,7 @@ jobs:
     report-test-signals:
         name: Report Jest test signals
         needs: [jest]
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         continue-on-error: true
         timeout-minutes: 10
         permissions:
@@ -1170,7 +1170,7 @@ jobs:
                 frontend_tests,
                 changes,
             ]
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         if: # Run on pull requests to PostHog/posthog + on PostHog/posthog outside of PRs - but never on forks or Dependabot (no secrets access)
             ${{ !cancelled() && github.actor != 'dependabot[bot]' &&
@@ -1227,7 +1227,7 @@ jobs:
     capture-jest-selection:
         name: Capture jest selection
         needs: [select-jest-tests, jest]
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         # Either the selector reached a decision, or jest ran without it (the full-run
         # baseline). Neither holds on a frontend-untouched PR, and there is nothing to
@@ -1270,7 +1270,7 @@ jobs:
     frontend_tests:
         needs: [changes, jest, jest-replay-shared, frontend-format, frontend-bundle-size, frontend-typescript-checks]
         name: Frontend Tests Pass
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         if: ${{ !cancelled() }}
         steps:

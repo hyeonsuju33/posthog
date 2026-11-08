@@ -30,7 +30,7 @@ jobs:
     # which the posting job treats as data.
     compute:
         name: Compute agent API changes
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 10
         # Same-repo PRs only: a fork's token cannot write the report comment. The merge queue's
         # draft PRs are ephemeral and unread, and every section write spends shared token budget.
@@ -88,7 +88,7 @@ jobs:
         name: Post agent API changes
         needs: compute
         if: needs.compute.outputs.compared == 'true'
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         permissions:
             contents: read

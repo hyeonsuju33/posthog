@@ -50,7 +50,7 @@ jobs:
             !startsWith(github.head_ref, 'trunk-merge/') &&
             (github.event.pull_request.draft != true ||
             !contains(github.event.pull_request.labels.*.name, 'no-ci'))
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         permissions: {}
         steps:
@@ -66,7 +66,7 @@ jobs:
         permissions:
             contents: read
             pull-requests: read
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         # A draft PR labeled `no-ci` skips this workflow entirely (prototypes):
         # every other job needs this one, and the gates treat skipped as success.
@@ -245,7 +245,7 @@ jobs:
 
     build-storybook:
         name: Build Storybook (depot-ubuntu-24.04)
-        runs-on: depot-ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         # The Vite build normally takes ~3.5 minutes, but a degraded runner can stretch
         # the memory-heavy bundling phase past 15 minutes — leave headroom so a slow
         # runner yields a slow-but-green build instead of a cancelled one that hard-fails
@@ -364,7 +364,7 @@ jobs:
     # the removal there and this job skips.
     check-baseline-removals:
         name: Check snapshot baseline removals
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         needs: [changes, build-storybook, select-stories]
         if: >-
@@ -446,7 +446,7 @@ jobs:
 
     vr-setup:
         name: Create Visual Review run
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         # The VR CLI build dominates this job whenever the cache misses, and it then
         # downloads the whole dependency tree. vr-complete allows the same budget for the
         # same build.
@@ -588,7 +588,7 @@ jobs:
 
     visual-regression:
         name: Visual regression tests - ${{ matrix.browser }} (${{ matrix.shard }}/${{ matrix.shard_count }})
-        runs-on: ${{ matrix.browser == 'webkit' && 'depot-ubuntu-24.04' || 'ubuntu-24.04' }}
+        runs-on: xenoci-2vcpu-ubuntu-2404
         needs: [changes, build-storybook, vr-setup, select-stories]
         # A status function is required because select-stories is skipped on forced-full
         # PRs and master pushes. !cancelled() rather than always() so a superseded run's
@@ -932,7 +932,7 @@ jobs:
     # Catches flaky snapshots and webkit-only breaks before they land on master.
     flake-verification:
         name: Storybook flake verification
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         needs: [changes, build-storybook]
         # Skipped on trunk-merge/**: the job diffs against the merge base to find changed stories,
         # which on a queue branch is the same set the PR's own run already verified.
@@ -1053,7 +1053,7 @@ jobs:
                 check-baseline-removals,
             ]
         name: Visual regression tests pass
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         if: ${{ !cancelled() }}
         steps:
@@ -1112,7 +1112,7 @@ jobs:
 
     vr-complete:
         name: Complete Visual Review run
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 15
         needs: [changes, visual-regression, vr-setup]
         # Intentional always(), not !cancelled(): this job finalizes external state,
@@ -1221,7 +1221,7 @@ jobs:
     calculate-running-time:
         name: Calculate running time
         needs: [visual-regression, visual_regression_tests, changes]
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         if: # Run on pull requests to PostHog/posthog + on PostHog/posthog outside of PRs - but never on forks or Dependabot (no secrets access)
             ${{ !cancelled() && github.actor != 'dependabot[bot]' &&
@@ -1266,7 +1266,7 @@ jobs:
     capture-story-selection:
         name: Capture story selection
         needs: [select-stories]
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         # select-stories skips merge-queue and forced-full runs. Fire only when it
         # produced a decision. DevEx project only; continue-on-error so telemetry never reds CI.
@@ -1305,7 +1305,7 @@ jobs:
     # uncertainty also falls back to the full matrix.
     select-stories:
         name: Story selection
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         needs: [changes, build-storybook]
         if: |

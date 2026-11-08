@@ -37,7 +37,7 @@ jobs:
             github.event.pull_request.head.repo.full_name == github.repository &&
             github.actor != 'dependabot[bot]' &&
             !startsWith(github.head_ref, 'trunk-merge/')
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         permissions: {}
         steps:
@@ -50,7 +50,7 @@ jobs:
     # Job to decide if we should run python ci
     # See .github/actions/paths-filter/README.md for filter semantics
     changes:
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         name: Determine need to run python checks
         # Set job outputs to values from filter step
@@ -245,7 +245,7 @@ jobs:
 
         name: Python code quality (depot-ubuntu-24.04)
         # Master runs mypy cold after a dependency change, which needs more than 8 GB.
-        runs-on: ${{ github.event_name == 'pull_request' && 'depot-ubuntu-24.04' || 'depot-ubuntu-24.04-4' }}
+        runs-on: xenoci-2vcpu-ubuntu-2404
         # Read by shell guards on the pytest steps below. Those steps sit in a
         # `parallel:` block, where step-level `if:` is untested in this repo.
         env:
@@ -542,7 +542,7 @@ jobs:
         # instead of the repo-wide code-quality one.
         if: needs.changes.outputs.api_ratchet == 'true' && github.event_name != 'push'
         name: lib/api.ts codegen ratchet
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 10
         steps:
             - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -581,7 +581,7 @@ jobs:
     python_tests:
         needs: [changes, code-quality, api-ratchet]
         name: Python code quality checks
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         if: ${{ !cancelled() }}
         steps:

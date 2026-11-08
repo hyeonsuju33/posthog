@@ -22,7 +22,7 @@ permissions:
 
 jobs:
     check-quarantine:
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         env:
             SLACK_CHANNEL: 'C0AS64N6DJL' # #alerts-devex

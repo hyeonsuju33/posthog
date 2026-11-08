@@ -24,7 +24,7 @@ concurrency:
 jobs:
     check-version:
         name: Check version legitimacy
-        runs-on: ubuntu-22.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         permissions:
             contents: read
@@ -105,7 +105,7 @@ jobs:
     build-wheels:
         name: Build wheels on ${{ matrix.os }} (${{ matrix.target }})
         needs: check-version
-        runs-on: ${{ matrix.os }}
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 30
         if: github.event_name == 'workflow_dispatch' ||
             (needs.check-version.outputs.deltalite-release-needed == 'true' &&
@@ -182,7 +182,7 @@ jobs:
         permissions:
             id-token: write # PyPI trusted publishing + provenance OIDC handshake
             attestations: write # actions/attest-build-provenance writes here
-        runs-on: ubuntu-22.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 10
         steps:
             - name: Download all wheel artifacts

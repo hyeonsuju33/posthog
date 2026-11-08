@@ -34,7 +34,7 @@ jobs:
     test:
         name: Agent render, helm and integration tests
         # No secrets needed, so this also runs on fork PRs.
-        runs-on: depot-ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 20
         permissions:
             contents: read
@@ -63,7 +63,7 @@ jobs:
             github.event_name == 'pull_request' &&
             github.event.pull_request.head.repo.full_name == github.repository &&
             contains(github.event.pull_request.labels.*.name, 'build-metrics-agent-image')
-        runs-on: depot-ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 30
         permissions:
             contents: read
@@ -96,7 +96,7 @@ jobs:
                 github.event_name == 'push' ||
                 (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master')
             )
-        runs-on: depot-ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 30
         permissions:
             contents: read
@@ -159,7 +159,7 @@ jobs:
         name: Publish Helm chart to GHCR
         needs: build
         if: github.repository_owner == 'PostHog' && github.ref == 'refs/heads/master' && vars.CD_DEPLOY_ENABLED == 'true' && vars.PUBLIC_IMAGE_PUSH_PAUSED != 'true'
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 10
         permissions:
             contents: read

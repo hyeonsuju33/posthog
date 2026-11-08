@@ -15,7 +15,7 @@ permissions:
 
 jobs:
     lint-and-test:
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 10
 
         steps:
@@ -41,7 +41,7 @@ jobs:
               run: cd bin/hobby-installer && make test
 
     build:
-        runs-on: ${{ matrix.runner }}
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 10
         strategy:
             matrix:

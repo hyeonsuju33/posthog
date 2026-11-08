@@ -22,7 +22,7 @@ permissions:
 jobs:
     lint-and-test:
         if: github.event_name == 'pull_request'
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 10
 
         steps:
@@ -46,7 +46,7 @@ jobs:
               run: cd livestream && make -f Makefile.tui test
 
     build:
-        runs-on: ${{ matrix.runner }}
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 10
         strategy:
             matrix:

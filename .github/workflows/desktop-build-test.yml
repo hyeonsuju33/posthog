@@ -48,7 +48,7 @@ jobs:
             matrix:
                 arch: [arm64, x64]
         # Depot macOS runners are Apple silicon only; the x64 build cross-compiles here.
-        runs-on: depot-macos-26
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 60
         permissions:
             id-token: write
@@ -225,7 +225,7 @@ jobs:
 
     smoke-macos-x64:
         needs: [build-macos]
-        runs-on: macos-15-intel
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 30
         permissions:
             contents: read
@@ -299,7 +299,7 @@ jobs:
                 (github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'desktop-build-installer'))
               )
             )
-        runs-on: depot-windows-2022-4
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 60
         permissions:
             contents: read
@@ -424,7 +424,7 @@ jobs:
                       arch: x64
                     - runner: depot-ubuntu-24.04-arm-4
                       arch: arm64
-        runs-on: ${{ matrix.runner }}
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 60
         permissions:
             contents: read
@@ -517,7 +517,7 @@ jobs:
         # leaving it pointing at stale artifacts. Runs only for labeled PRs.
         needs: [build-macos, smoke-macos-x64, build-windows, build-linux]
         if: ${{ !cancelled() && github.event_name == 'pull_request' && needs.build-macos.result != 'skipped' }}
-        runs-on: depot-ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         permissions:
             issues: write

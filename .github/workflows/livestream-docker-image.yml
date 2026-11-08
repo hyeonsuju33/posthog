@@ -20,7 +20,7 @@ concurrency:
 
 jobs:
     build:
-        runs-on: depot-ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 10
 
         # Skipped on trunk-merge/** branches: merge-queue PRs are ephemeral, nothing
@@ -93,7 +93,7 @@ jobs:
                   project: '87b1ch2t7h'
 
     deploy:
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         needs: build
         if: github.repository_owner == 'PostHog' && vars.CD_DEPLOY_ENABLED == 'true' && github.ref == 'refs/heads/master'

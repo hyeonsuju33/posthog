@@ -33,7 +33,7 @@ concurrency:
 
 jobs:
     changes:
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         permissions:
             contents: read
             pull-requests: read
@@ -113,7 +113,7 @@ jobs:
         if: |
             (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == 'PostHog/posthog' && needs.changes.outputs.node_files == 'true') ||
             (github.event_name == 'push' && github.ref == 'refs/heads/master' && needs.changes.outputs.node_files == 'true' && github.repository_owner == 'PostHog' && vars.CD_DEPLOY_ENABLED == 'true')
-        runs-on: depot-ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 30
         outputs:
             image-digest: ${{ steps.build.outputs.digest }}
@@ -284,7 +284,7 @@ jobs:
         # take Freight from it. Mirrors the posthog_build alias job in container-images-cd.yml.
         # Best effort: a missing alias delays that service's Freight and never fails the deploy.
         if: ${{ needs.build.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'PostHog' && vars.CD_DEPLOY_ENABLED == 'true' && vars.ORDERED_IMAGE_ALIAS_PAUSED != 'true' }}
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         continue-on-error: true
         permissions:

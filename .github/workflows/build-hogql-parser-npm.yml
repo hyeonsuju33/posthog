@@ -22,7 +22,7 @@ env:
 jobs:
     check-package-version:
         name: Check npm package version
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         permissions:
             contents: read
@@ -82,7 +82,7 @@ jobs:
     build-wasm:
         name: Build WASM
         needs: check-package-version
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 30
         if: needs.check-package-version.outputs.is-new-version == 'true' &&
             (github.event_name == 'workflow_dispatch' ||
@@ -113,7 +113,7 @@ jobs:
         # is a manual dispatch on master and never a pull request run.
         if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master' && github.repository == 'PostHog/posthog'
         environment: npm-hogql-parser
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 10
         permissions:
             contents: read

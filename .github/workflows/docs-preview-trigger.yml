@@ -20,7 +20,7 @@ jobs:
         # never blocked a merge anyway.
         if: ${{ !startsWith(github.head_ref, 'trunk-merge/') }}
         name: Trigger posthog.com preview build
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         steps:
             - name: Checkout

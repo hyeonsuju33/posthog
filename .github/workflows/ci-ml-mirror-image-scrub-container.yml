@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
     changes:
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         permissions:
             contents: read
             pull-requests: read
@@ -56,7 +56,7 @@ jobs:
         needs: changes
         name: Unit-test ml-mirror-image-scrub
         if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == 'PostHog/posthog' && needs.changes.outputs.scrub_files == 'true'
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 15
         permissions:
             contents: read
@@ -108,7 +108,7 @@ jobs:
             ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == 'PostHog/posthog' && needs.changes.outputs.scrub_files == 'true') ||
              (github.event_name == 'workflow_dispatch' && github.repository_owner == 'PostHog' && vars.CD_DEPLOY_ENABLED == 'true') ||
              (github.event_name == 'push' && github.ref == 'refs/heads/master' && needs.changes.outputs.scrub_files == 'true' && github.repository_owner == 'PostHog' && vars.CD_DEPLOY_ENABLED == 'true'))
-        runs-on: depot-ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 30
         permissions:
             id-token: write # allow issuing OIDC tokens for this workflow run
@@ -215,7 +215,7 @@ jobs:
 
     deploy:
         name: Deploy ml-mirror-image-scrub service
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         needs: build
         if: github.repository_owner == 'PostHog' && vars.CD_DEPLOY_ENABLED == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/master'

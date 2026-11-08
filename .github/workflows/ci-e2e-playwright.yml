@@ -87,7 +87,7 @@ jobs:
             github.actor != 'dependabot[bot]' &&
             !startsWith(github.head_ref, 'trunk-merge/') &&
             github.event.pull_request.draft != true
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         permissions: {}
         steps:
@@ -101,7 +101,7 @@ jobs:
         permissions:
             contents: read
             pull-requests: read
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         # 7 not 5: the debounce step below sleeps up to 60s, so widen the budget to
         # keep ample headroom. A timeout here skips Playwright, which the aggregator
         # would count as a pass.
@@ -393,7 +393,7 @@ jobs:
             && github.event_name == 'pull_request'
             && github.event.pull_request.draft != true
             && github.event.pull_request.head.repo.full_name == github.repository
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         outputs:
             mode: ${{ steps.classify.outputs.mode }}
@@ -536,7 +536,7 @@ jobs:
         # 8-core depot: 18% avg / 30% peak memory observed on 16-core runs (#46853 noted
         # the workload "is not resource constrained" even after sharding was removed).
         # Talk to #team-devex before changing.
-        runs-on: depot-ubuntu-24.04-8
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 45
         permissions:
             contents: read
@@ -1242,7 +1242,7 @@ jobs:
     # hogli-lint: not-a-required-gate - records telemetry and emits no required check.
     capture-run-time:
         name: Capture run time
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         needs: [changes, select-specs, playwright, playwright_tests]
         if: # Run on pull requests to PostHog/posthog + on PostHog/posthog outside of PRs - but never on forks or Dependabot (no secrets access)
@@ -1324,7 +1324,7 @@ jobs:
         name: Complete Visual Review run
         # Same runner provider as the playwright job, whose VR CLI cache entry this job
         # reads: GitHub-hosted and Depot runners keep separate cache stores.
-        runs-on: depot-ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 15
         needs: [playwright]
         # !cancelled() is load-bearing. select-specs is skipped on every full-run event (push to
@@ -1409,7 +1409,7 @@ jobs:
     playwright_tests:
         needs: [changes, playwright, vr-complete]
         name: Playwright tests pass
-        runs-on: ubuntu-24.04
+        runs-on: xenoci-2vcpu-ubuntu-2404
         timeout-minutes: 5
         if: ${{ !cancelled() }}
         steps:
